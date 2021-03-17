@@ -1,0 +1,123 @@
+/*Profile Card 5*/
+.profile-card-5{
+  margin: auto;
+  margin-top:20px;
+  text-align: center;
+  font-family: arial;
+  font-style: bold;
+}
+
+.card-body{
+  padding-top: 10px;
+}
+
+.review-judul{
+  font-size: xx-large;
+  margin: 0 auto;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.review-cover{
+  width: 100%;
+  float: left;
+}
+
+.review-form{
+  padding: 0%;
+}
+
+.review-cover-img{
+  width: 500px;
+  height: 380px;
+}
+
+.review-info-text{
+  display: inline-block;
+  font-size: large;
+  line-height: 60px;
+  margin-right: 10px;
+}
+
+.review-info{
+  display: inline-block;
+  font-size: large;
+  line-height: 60px;
+}
+
+.review-input1, .review-input2, .review-input3, .review-input4, .review-input5{
+  line-height: 20px;
+}
+
+.review-rating{
+  float: right;
+}
+
+.review-submit{
+  font-size: large;
+  margin: 0 auto;
+  border-radius:10px;
+  background-color: #F65353;
+}
+/* For pdf */
+.react-pdf__Page {
+  margin-top: 10px;
+}
+.react-pdf__Page__textContent {
+  border: 1px solid darkgrey;
+  box-shadow: 5px 5px 5px 1px #ccc;
+  border-radius: 5px;
+}
+
+.react-pdf__Page__annotations.annotationLayer {
+  padding: 20px;
+}
+
+.react-pdf__Page__canvas {
+  margin: 0 auto;
+}
+
+/* For all pages */
+.all-page-container {
+  height: 100%;
+  max-height: 1200px;
+  overflow: auto;
+}
+
+button1{
+  margin-right: 50px;
+  background: cyan;
+  color: black;
+  text-align: center;
+  border: none;
+  padding: 10px 10px;
+  width: 100px;
+  cursor: pointer;
+  border-radius: 12px;
+  box-shadow: 2px 2px 2px 1px #ccc;
+}
+button2{
+  margin-left: 20px;
+  background: cyan;
+  color: black;
+  text-align: center;
+  border: none;
+  padding: 10px 10px;
+  width: 100px;
+  cursor: pointer;
+  border-radius: 12px;
+  box-shadow: 2px 2px 2px 1px #ccc;
+}
+.App1 {
+  font-family: sans-serif;
+  text-align: center;
+}
+
+h4 {
+  text-align: left;
+  margin-left: 40px;
+}
+
+hr {
+  border-top: 2px dotted #3f51b5;
+}

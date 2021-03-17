@@ -1,0 +1,18 @@
+{/*{this.state.buku_menu.map((buku_menu, index) => (*/}
+          {/*  <Col xs="12" xl="4" key={index}>*/}
+          {/*    <Card>*/}
+          {/*      <CardBody>*/}
+          {/*        <img className="center" src={process.env.PUBLIC_URL + '/Images/' + buku_menu[6] } style={buku} alt="buku_menu"></img>*/}
+          {/*        <br/>*/}
+          {/*        <br/>*/}
+          {/*        <Link to={`detail/${buku_menu[0]}`}>*/}
+          {/*        <h6 >{buku_menu[1]}</h6>*/}
+          {/*        </Link>*/}
+
+          {/*        <h6>{buku_menu[5]}</h6>*/}
+          {/*        <h6>{buku_menu[3]} ({buku_menu[4]})</h6>*/}
+          {/*        <h6>{buku_menu[2]}</h6>*/}
+          {/*      </CardBody>*/}
+          {/*    </Card>*/}
+          {/*  </Col>*/}
+          {/*))}*/}
