@@ -64,6 +64,10 @@ def create_app():
     from ObjectClass.Pencarian.Pencarian import cari
     app.register_blueprint(cari)
 
+    # Kriteria
+    from ObjectClass.Kriteria.Kriteria import kriteria
+    app.register_blueprint(kriteria)
+
     # Hitung Vikor
     from ObjectClass.HitungVIKOR.HitungVikor import vikor
     app.register_blueprint(vikor)
