@@ -2,7 +2,7 @@ import axios from 'axios'
 
 export const getKriteria = () => {
   return axios
-    .get('/kriteria_buku', {
+    .get('/kriteria', {
       headers: { "Content-type": "application/json" }
     })
     .then(res => {
@@ -21,35 +21,6 @@ export const getKriteria = () => {
     })
 }
 
-export const addKriteria = newKriteria => {
-  return axios
-    .post(
-      '/kriteria', {
-        kode: newKriteria.kode,
-        nama_kriteria: newKriteria.nama_kriteria,
-        bobot: newKriteria.bobot,
-        tipe_kriteria: newKriteria.tipe_kriteria,
-      }, {
-        headers: { "Content-type": "application/json" }
-      })
-    .then((res) => {
-      console.log(res)
-    })
-}
-
-export const deleteKriteria = id_kriteria => {
-  axios
-    .delete(
-      `/kriteria/${id_kriteria}`, {
-        headers: { "Content-type": "application/json" }
-      })
-    .then((res) => {
-      console.log(res)
-    })
-    .catch((res) => {
-      console.log(res)
-    })
-}
 
 export const updateKriteria = (kode, nama_kriteria, bobot, tipe_kriteria, id_kriteria) => {
   return axios
