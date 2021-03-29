@@ -60,13 +60,6 @@ def get_matriks_keputusan():
     rv = cur.fetchall()
     return jsonify(rv)
 
-# Read kelayakan isi
-@vikor.route('/kelayakan_isi_data', methods=['GET'])
-def get_kelayakan_isi_data():
-    cur = db.connection.cursor()
-    cur.execute("SELECT kelayakan_isi FROM tbl_nilai_buku")
-    rv = cur.fetchall()
-    return jsonify(rv)
 
 # Read kebahasaan
 @vikor.route('/kebahasaan_data', methods=['GET'])
@@ -104,100 +97,111 @@ def get_all_nilai_data():
 # Read Vikor (bismillah)
 @vikor.route('/buku_vikor', methods=['GET'])
 def get_buku_vikor_data():
-    ObjekVikor = CobaHitungVIKOR()
-    alternatif = ObjekVikor.data_IdBuku()
-    kriteria = ObjekVikor.data_Kriteria()
-    tipe_kriteria = ObjekVikor.data_TipeKriteria()
-    bobot_kriteria = ObjekVikor.data_Bobot()
-    matriks_keputusan = ObjekVikor.data_matriks_keputusan()
+    try:
+        ObjekVikor = CobaHitungVIKOR()
+        alternatif = ObjekVikor.data_IdBuku()
+        kriteria = ObjekVikor.data_Kriteria()
+        tipe_kriteria = ObjekVikor.data_TipeKriteria()
+        bobot_kriteria = ObjekVikor.data_Bobot()
+        matriks_keputusan = ObjekVikor.data_matriks_keputusan()
 
-    arrayData = ObjekVikor.hitung_vikor(alternatif,kriteria,tipe_kriteria,bobot_kriteria,matriks_keputusan)
+        arrayData = ObjekVikor.hitung_vikor(alternatif, kriteria, tipe_kriteria, bobot_kriteria, matriks_keputusan)
+        data = [str(int) for int in arrayData]
+        res = ",".join(data)
 
-    data = [str(int) for int in arrayData]
-    res = ",".join(data)
+        cur = db.connection.cursor()
+        cur.execute(
+            "SELECT id_buku, kode_buku, nama_buku, jenis_buku, tenaga_kesehatan, nama_penerbit, tahun_terbit, nama_penulis, gambar, userfile  "
+            "FROM tbl_buku as b "
+            "INNER JOIN tbl_jenis as j "
+            "on b.id_jenis = j.id_jenis "
+            "INNER JOIN tbl_nakes as n "
+            "on b.id_nakes = n.id_nakes "
+            "INNER JOIN tbl_penerbit as p1 "
+            "on b.id_penerbit = p1.id_penerbit "
+            "INNER JOIN tbl_penulis as p2 "
+            "on b.id_penulis = p2.id_penulis  WHERE id_buku in (" + res + ") ORDER BY FIELD(id_buku," + res + ")")
 
-    cur = db.connection.cursor()
-    cur.execute(
-        "SELECT id_buku, kode_buku, nama_buku, jenis_buku, tenaga_kesehatan, nama_penerbit, tahun_terbit, nama_penulis, gambar, userfile  "
-        "FROM tbl_buku as b "
-        "INNER JOIN tbl_jenis as j "
-        "on b.id_jenis = j.id_jenis "
-        "INNER JOIN tbl_nakes as n "
-        "on b.id_nakes = n.id_nakes "
-        "INNER JOIN tbl_penerbit as p1 "
-        "on b.id_penerbit = p1.id_penerbit "
-        "INNER JOIN tbl_penulis as p2 "
-        "on b.id_penulis = p2.id_penulis  WHERE id_buku in ("+res+") ORDER BY FIELD(id_buku,"+res+")")
+        db.connection.commit()
 
-    rv = cur.fetchall()
-    # return jsonify(arrayData)
-    return jsonify(rv)
+        rv = cur.fetchall()
+        return jsonify(rv)
+        # return jsonify({'message': 'data pada '+ arrayData +' ada'})
 
-# Read normalisasi
-@vikor.route('/normalisasi', methods=['GET'])
-def get_normalisasi():
-    ObjekVikor = CobaHitungVIKOR()
-    alternatif = ObjekVikor.data_IdBuku()
-    kriteria = ObjekVikor.data_Kriteria()
-    tipe_kriteria = ObjekVikor.data_TipeKriteria()
+    except:
+        cur = db.connection.cursor()
+        cur.execute(
+            "SELECT id_buku, kode_buku, nama_buku, jenis_buku, tenaga_kesehatan, nama_penerbit, tahun_terbit, nama_penulis, gambar, userfile  "
+            "FROM tbl_buku as b "
+            "INNER JOIN tbl_jenis as j "
+            "on b.id_jenis = j.id_jenis "
+            "INNER JOIN tbl_nakes as n "
+            "on b.id_nakes = n.id_nakes "
+            "INNER JOIN tbl_penerbit as p1 "
+            "on b.id_penerbit = p1.id_penerbit "
+            "INNER JOIN tbl_penulis as p2 "
+            "on b.id_penulis = p2.id_penulis  ")
 
-    matriks_keputusan = ObjekVikor.data_matriks_keputusan()
+        db.connection.commit()
 
-    arrayData = ObjekVikor.hitung_Normalisasi(alternatif,kriteria,tipe_kriteria,matriks_keputusan)
+        rv = cur.fetchall()
+        return jsonify(rv)
+# Read Vikor (bismillah)
+@vikor.route('/buku_vikor2', methods=['GET'])
+def get_buku_vikor_data2():
+    try:
+        ObjekVikor = CobaHitungVIKOR()
+        alternatif = ObjekVikor.data_IdBuku()
+        kriteria = ObjekVikor.data_Kriteria()
+        tipe_kriteria = ObjekVikor.data_TipeKriteria()
+        bobot_kriteria = ObjekVikor.data_Bobot()
+        matriks_keputusan = ObjekVikor.data_matriks_keputusan()
 
-    data = [str(int) for int in arrayData]
-    res = ",".join(data)
+        arrayData = ObjekVikor.hitung_vikor(alternatif, kriteria, tipe_kriteria, bobot_kriteria, matriks_keputusan)
+        data = [str(int) for int in arrayData]
+        res = ",".join(data)
 
-    cur = db.connection.cursor()
-    cur.execute(
-        "SELECT kode_buku, kelayakan_isi, kebahasaan, penyajian, kegrafikaan "
-        "FROM tbl_nilai_buku as nb "
-        "INNER JOIN tbl_buku as b "
-        "ON b.id_buku = nb.id_buku "
-        "WHERE id_nilai_buku in ("+res+") ORDER BY FIELD(id_nilai_buku,"+res+")")
+        cur = db.connection.cursor()
+        cur.execute(
+            "SELECT id_buku, kode_buku, nama_buku, jenis_buku, tenaga_kesehatan, nama_penerbit, tahun_terbit, nama_penulis, gambar, userfile  "
+            "FROM tbl_buku as b "
+            "INNER JOIN tbl_jenis as j "
+            "on b.id_jenis = j.id_jenis "
+            "INNER JOIN tbl_nakes as n "
+            "on b.id_nakes = n.id_nakes "
+            "INNER JOIN tbl_penerbit as p1 "
+            "on b.id_penerbit = p1.id_penerbit "
+            "INNER JOIN tbl_penulis as p2 "
+            "on b.id_penulis = p2.id_penulis  WHERE id_buku in (" + res + ") ORDER BY FIELD(id_buku," + res + ")")
 
-    rv = cur.fetchall()
+        db.connection.commit()
 
-    # return jsonify(arrayData)
-    return jsonify(rv)
+        rv = cur.fetchall()
+        return jsonify(rv)
+        # return jsonify({'message': 'data pada '+ arrayData +' ada'})
 
-# Read Nilai Maks
-@vikor.route('/nilai_maks', methods=['GET'])
-def get_nilai_maks():
-    cur = db.connection.cursor()
-    cur.execute("SELECT MAX(kelayakan_isi) as kelayakan_isi, MAX(kebahasaan) as kebahasaan, MAX(penyajian) as penyajian, MAX(kegrafikaan) as kegrafikaan "
-                " FROM tbl_nilai_buku Order BY id_buku")
-    rv = cur.fetchall()
-    return jsonify(rv)
+    except:
+        cur = db.connection.cursor()
+        cur.execute(
+            "SELECT id_buku, kode_buku, nama_buku, jenis_buku, tenaga_kesehatan, nama_penerbit, tahun_terbit, nama_penulis, gambar, userfile  "
+            "FROM tbl_buku as b "
+            "INNER JOIN tbl_jenis as j "
+            "on b.id_jenis = j.id_jenis "
+            "INNER JOIN tbl_nakes as n "
+            "on b.id_nakes = n.id_nakes "
+            "INNER JOIN tbl_penerbit as p1 "
+            "on b.id_penerbit = p1.id_penerbit "
+            "INNER JOIN tbl_penulis as p2 "
+            "on b.id_penulis = p2.id_penulis  ")
 
-# Read Nilai Min
-@vikor.route('/nilai_min', methods=['GET'])
-def get_nilai_min():
-    cur = db.connection.cursor()
-    cur.execute("SELECT MIN(kelayakan_isi) as kelayakan_isi, MIN(kebahasaan) as kebahasaan, MIN(penyajian) as penyajian, MIN(kegrafikaan) as kegrafikaan "
-                " FROM tbl_nilai_buku Order BY id_buku")
-    rv = cur.fetchall()
-    return jsonify(rv)
+        db.connection.commit()
 
-# Read normalisasi
-@vikor.route('/test_normalisasi', methods=['GET'])
-def get_test_normalisasi():
-    ObjekVikor = CobaHitungVIKOR()
-    alternatif = ObjekVikor.data_IdBuku()
-    kriteria = ObjekVikor.data_Kriteria()
-    tipe_kriteria = ObjekVikor.data_TipeKriteria()
-
-    matriks_keputusan = ObjekVikor.data_matriks_keputusan()
-
-    arrayData = ObjekVikor.hitung_Normalisasi(alternatif,kriteria,tipe_kriteria,matriks_keputusan)
-
-    # test = json.load(arrayData)
-
-    result = \
-        {
-            'Normalisasi': arrayData
-        }
+        rv = cur.fetchall()
+        return jsonify(rv)
+        # return jsonify({'message': 'data tidak ada'})
 
 
-    # return jsonify(arrayData)
-    return jsonify({"result" : result})
+
+# @vikor.errorhandler(500)
+# def custom500():
+#     return jsonify({'message': 'test error'})
