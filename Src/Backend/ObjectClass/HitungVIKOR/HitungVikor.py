@@ -56,7 +56,12 @@ def get_kode_kriteria_data():
 @vikor.route('/matriks_keputusan', methods=['GET'])
 def get_matriks_keputusan():
     cur = db.connection.cursor()
-    cur.execute("SELECT id_buku, kelayakan_isi, kebahasaan, penyajian, kegrafikaan FROM tbl_nilai_buku")
+    # cur.execute("SELECT id_buku, kelayakan_isi, kebahasaan, penyajian, kegrafikaan FROM tbl_nilai_buku")
+    cur.execute("SELECT id_buku, AVG(kelayakan_isi) as kelayakan_isi, "
+                "AVG(kebahasaan) as kebahasaan, "
+                "AVG(penyajian) as penyajian, "
+                "AVG(kegrafikaan) as kegrafikaan "
+                "FROM tbl_nilai_buku GROUP BY id_buku")
     rv = cur.fetchall()
     return jsonify(rv)
 
