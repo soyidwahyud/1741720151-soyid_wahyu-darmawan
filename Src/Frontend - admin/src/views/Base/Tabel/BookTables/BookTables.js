@@ -16,6 +16,7 @@ import {
 } from '../../../../Function/BukuFunction'
 
 import axios, {post} from 'axios'
+import {Polar} from "react-chartjs-2";
 
 class BookTables extends Component {
   constructor() {
@@ -37,6 +38,9 @@ class BookTables extends Component {
       id_penulis:'',
       gambar:null,
       userfile:null,
+
+      // Grafik
+      grafik_total_buku:{},
       //Array
       tbl_buku:[],
       idjenis:[],
@@ -67,7 +71,47 @@ class BookTables extends Component {
     this.getIdNakes()
     this.getIdPenerbit()
     this.getIdPenulis()
+    this.getGrafikTotal()
   }
+  //Grafik getTotal
+  //Get Grafik Total
+  getGrafikTotal = () =>{
+    axios.get('/grafik_total_buku')
+      .then(res => {
+        console.log(res)
+        const total_buku = res.data
+        let tenaga_kesehatan = []
+        let total = []
+        total_buku.forEach(record => {
+          tenaga_kesehatan.push(record.tenaga_kesehatan)
+          total.push(record.total)
+        })
+        this.setState({
+          grafik_total_buku: {
+            labels: tenaga_kesehatan,
+            datasets:[
+              {
+                label: 'Total Buku',
+                data: total,
+                backgroundColor: [
+                  "#3cb371",
+                  "#0000FF",
+                  "#9966FF",
+                  "#4C4CFF",
+                  "#00FFFF",
+                  "#f990a7",
+                  "#aad2ed",
+                  "#FF00FF",
+                  "Blue",
+                  "Red"
+                ]
+              }
+            ]
+          }
+        })
+      })
+  }
+
   //  Kode buku
   onKodeBuku(e) {
         this.setState({kode_buku:e.target.value})
@@ -225,6 +269,8 @@ onBukuSubmit(e){
     console.log(response.data);
   }).then(()=>{
     this.getAll()
+  }).then(()=>{
+    this.getGrafikTotal()
   })
 }
 
@@ -458,58 +504,78 @@ onBukuSubmit(e){
               </CardFooter>
             </Card>
           </Col>
-
-          {/*Tabel*/}
-          <Col xs="15" lg="15">
-            <Card>
-              <CardHeader>
-                <i className="fa fa-align-justify"></i> Tabel Buku
-              </CardHeader>
-              <CardBody>
-                <Table responsive>
-                  <thead>
-                  <tr>
-                    <th>No Buku</th>
-                    <th>Kode Buku</th>
-                    <th>Nama Buku</th>
-                    <th>Jenis Buku</th>
-                    <th>Tenaga Kesehatan</th>
-                    <th>Nama Penerbit</th>
-                    <th>Tahun Terbit</th>
-                    <th>Nama Penulis</th>
-                    <th>Gambar</th>
-                    <th>User File</th>
-                    <th>Update</th>
-                    <th>Delete</th>
-                  </tr>
-                  </thead>
-                  <tbody>
-                  {this.state.tbl_buku.map((tbl_buku, index) => (
-                    <tr key={index}>
-                      <td>{tbl_buku[0]}</td>
-                      <td>{tbl_buku[1]}</td>
-                      <td>{tbl_buku[2]}</td>
-                      <td>{tbl_buku[3]}</td>
-                      <td>{tbl_buku[4]}</td>
-                      <td>{tbl_buku[5]}</td>
-                      <td>{tbl_buku[6]}</td>
-                      <td>{tbl_buku[7]}</td>
-                      <td>{tbl_buku[8]}</td>
-                      <td>{tbl_buku[9]}</td>
-                      <td><Button type="submit" size="sm" color="primary" onClick={this.routeEdit.bind(this, tbl_buku[1], tbl_buku[2],
-                                                                                                             tbl_buku[3], tbl_buku[4],
-                                                                                                             tbl_buku[5], tbl_buku[6], tbl_buku[8],
-                                                                                                             tbl_buku[7], tbl_buku[0])}><i className="fa fa-dot-circle-o"></i>Edit </Button></td>
-                      <td><Button type="reset" size="sm" color="danger" onClick={this.routeDelete.bind(this, tbl_buku[0])}><i className="fa fa-ban"></i>Delete </Button></td>
-                    </tr>
-                  ))}
-                  </tbody>
-                </Table>
-
-              </CardBody>
-            </Card>
-          </Col>
         </Row>
+
+        {/*Grafik Total*/}
+        <Col xs="15" lg="20">
+          <Card>
+            <CardHeader>
+              <i className="fa fa-align-justify"></i> Grafik Total Buku
+            </CardHeader>
+            <CardBody>
+              <Polar data={this.state.grafik_total_buku}
+                             options={{maintainAspectRatio: false,
+                               responsive: true,
+                               legend: {
+                                 display: true,
+                               }
+                             }}
+              />
+            </CardBody>
+          </Card>
+        </Col>
+
+
+        {/*Tabel*/}
+        <Col xs="15" lg="15">
+          <Card>
+            <CardHeader>
+              <i className="fa fa-align-justify"></i> Tabel Buku
+            </CardHeader>
+            <CardBody>
+              <Table responsive>
+                <thead>
+                <tr>
+                  <th>No Buku</th>
+                  <th>Kode Buku</th>
+                  <th>Nama Buku</th>
+                  <th>Jenis Buku</th>
+                  <th>Tenaga Kesehatan</th>
+                  <th>Nama Penerbit</th>
+                  <th>Tahun Terbit</th>
+                  <th>Nama Penulis</th>
+                  <th>Gambar</th>
+                  <th>User File</th>
+                  <th>Update</th>
+                  <th>Delete</th>
+                </tr>
+                </thead>
+                <tbody>
+                {this.state.tbl_buku.map((tbl_buku, index) => (
+                  <tr key={index}>
+                    <td>{tbl_buku[0]}</td>
+                    <td>{tbl_buku[1]}</td>
+                    <td>{tbl_buku[2]}</td>
+                    <td>{tbl_buku[3]}</td>
+                    <td>{tbl_buku[4]}</td>
+                    <td>{tbl_buku[5]}</td>
+                    <td>{tbl_buku[6]}</td>
+                    <td>{tbl_buku[7]}</td>
+                    <td>{tbl_buku[8]}</td>
+                    <td>{tbl_buku[9]}</td>
+                    <td><Button type="submit" size="sm" color="primary" onClick={this.routeEdit.bind(this, tbl_buku[1], tbl_buku[2],
+                      tbl_buku[3], tbl_buku[4],
+                      tbl_buku[5], tbl_buku[6], tbl_buku[8],
+                      tbl_buku[7], tbl_buku[0])}><i className="fa fa-dot-circle-o"></i>Edit </Button></td>
+                    <td><Button type="reset" size="sm" color="danger" onClick={this.routeDelete.bind(this, tbl_buku[0])}><i className="fa fa-ban"></i>Delete </Button></td>
+                  </tr>
+                ))}
+                </tbody>
+              </Table>
+
+            </CardBody>
+          </Card>
+        </Col>
 
 
       </div>

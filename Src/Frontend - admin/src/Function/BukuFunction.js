@@ -77,7 +77,6 @@ export const getIdPenerbit = () => {
           val.nama_penerbit,
           val.tahun_terbit])
       })
-
       return idpenerbit
     })
 }
@@ -95,7 +94,6 @@ export const getIdPenulis = () => {
           val.id_penulis,
           val.nama_penulis])
       })
-
       return idpenulis
     })
 }

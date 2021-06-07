@@ -60,3 +60,44 @@ export const getNilaiMin = () => {
       return nilai_min
     })
 }
+
+//SELECT NORMALISASI
+export const getNormalisasi = () => {
+  return axios
+    .get('/normalisasi',{
+      headers: { "Content-type": "application/json" }
+    })
+    .then(res => {
+      var normalisasi = []
+      Object.keys(res.data).forEach((key) => {
+        var val = res.data[key]
+        normalisasi.push([
+          val.normalisasi_1,
+          val.normalisasi_2,
+          val.normalisasi_3,
+          val.normalisasi_4])
+      })
+      return normalisasi
+    })
+}
+
+//SELECT Tabel Ranking
+export const getTabelRanking = () => {
+  return axios
+    .get('/tabel_ranking',{
+      headers: { "Content-type": "application/json" }
+    })
+    .then(res => {
+      var tabel_ranking = []
+      Object.keys(res.data).forEach((key) => {
+        var val = res.data[key]
+        tabel_ranking.push([
+          val.ranking,
+          val.kode_buku,
+          val.nama_buku])
+      })
+      return tabel_ranking
+    })
+}
+
+

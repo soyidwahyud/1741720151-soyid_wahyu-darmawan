@@ -18,6 +18,64 @@ class BukuTables extends Component {
       })
   }
 
+  ambilDataTahunTerbaru = () => {
+    fetch('http://127.0.0.1:5000/tahun_ascending')
+      .then(response => response.json())
+      .then(jsonHasilAmbilDariAPI => {
+        this.setState({
+          ListBuku: jsonHasilAmbilDariAPI
+        })
+      })
+  }
+
+  ambilDataTahunTerlama = () => {
+    fetch('http://127.0.0.1:5000/tahun_descending')
+      .then(response => response.json())
+      .then(jsonHasilAmbilDariAPI => {
+        this.setState({
+          ListBuku: jsonHasilAmbilDariAPI
+        })
+      })
+  }
+
+  ambilDataBukuAscending = () => {
+    fetch('http://127.0.0.1:5000/buku_ascending')
+      .then(response => response.json())
+      .then(jsonHasilAmbilDariAPI => {
+        this.setState({
+          ListBuku: jsonHasilAmbilDariAPI
+        })
+      })
+  }
+
+  ambilDataBukuDescending = () => {
+    fetch('http://127.0.0.1:5000/buku_descending')
+      .then(response => response.json())
+      .then(jsonHasilAmbilDariAPI => {
+        this.setState({
+          ListBuku: jsonHasilAmbilDariAPI
+        })
+      })
+  }
+
+  handleChange(filter){
+    if(filter == "tahun_ascending"){
+      this.ambilDataTahunTerbaru()
+    }
+    else if(filter == "tahun_descending"){
+      this.ambilDataTahunTerlama()
+    }
+    else if(filter == "judul_ascending"){
+      this.ambilDataBukuAscending()
+    }
+    else if(filter == "judul_descending"){
+      this.ambilDataBukuDescending()
+    }
+    else{
+      this.ambilDataDariServerAPI()
+    }
+  }
+
   componentDidMount() {
     // this.getBukuMenu()
     this.ambilDataDariServerAPI()
@@ -25,9 +83,24 @@ class BukuTables extends Component {
   render() {
     return (
       <div className="animated fadeIn">
-
+        <br/>
+          <from>
+            <select onChange={(val) => this.handleChange(val.target.value)}>
+              <option value="0">Diurutkan dari:</option>
+              <option value="Buku">Buku</option>
+              <option value="tahun_ascending">Tahun Terbit Terlama</option>
+              <option value="tahun_descending">Tahun Terbit Terbaru</option>
+              <option value="judul_ascending">Judul Buku A - Z</option>
+              <option value="judul_descending">Judul Buku Z - A</option>
+            </select>
+          </from>
         <br/>
         <br/>
+        <Card>
+          <CardBody>
+            <p>Menu ini menampilkan data keseluruhan semua buku yang ada pada database pada tabel buku</p>
+          </CardBody>
+        </Card>
         <Row>
           {
             this.state.ListBuku.map(buku => {

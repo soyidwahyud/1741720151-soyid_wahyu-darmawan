@@ -10,26 +10,23 @@ user = Blueprint('user', __name__)
 @user.route('/user/register', methods=['POST'])
 def add_user():
     cur = db.connection.cursor()
-
     nik = request.get_json()['nik']
     nama_user = request.get_json()['nama_user']
     username_user = request.get_json()['username_user']
     email_user = request.get_json()['email_user']
     password_user = bcrypt.generate_password_hash(request.get_json()['password_user']).decode('utf-8')
-
     alamat = request.get_json()['alamat']
     notelp = request.get_json()['notelp']
 
     cur.execute("INSERT INTO tbl_user (id_user,nik, nama_user, username_user,email_user,password_user, alamat, notelp) "
                 " SELECT MAX(id_user)+1, "
                 "'" + str(nik) + "', "
-                                 "'" + str(nama_user) + "', "
-                                                        "'" + str(username_user) + "', "
-                                                                                   "'" + str(email_user) + "', "
-                                                                                                           "'" + str(
-        password_user) + "', "
-                         "'" + str(alamat) + "', "
-                                             "'" + str(notelp) + "' " +
+                "'" + str(nama_user) + "', "
+                "'" + str(username_user) + "', "
+                "'" + str(email_user) + "', "
+                "'" + str(password_user) + "', "
+                "'" + str(alamat) + "', "
+                "'" + str(notelp) + "' " +
                 "FROM tbl_user")
 
     db.connection.commit()

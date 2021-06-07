@@ -157,7 +157,7 @@ class PenerbitTables extends Component {
         </Col>
 
         <Row>
-          <Col xs="12" lg="6">
+          <Col xs="12" lg="12">
             <Card>
               <CardHeader>
                 <i className="fa fa-align-justify"></i> Tabel Penerbit Buku

@@ -13,8 +13,6 @@ app = Flask(__name__)
 
 def create_app():
     cors = CORS(app, resources=r'/*')
-
-
     app.config['MYSQL_HOST'] = 'localhost'
     app.config['MYSQL_USER'] = 'root'
     app.config['MYSQL_PASSWORD'] = ''
@@ -71,5 +69,17 @@ def create_app():
     # Hitung Vikor
     from ObjectClass.HitungVIKOR.HitungVikor import vikor
     app.register_blueprint(vikor)
+
+    # Tabel Vikor
+    from ObjectClass.TabelVikor.Tabel import tabel
+    app.register_blueprint(tabel)
+
+    # Grafik
+    from ObjectClass.Grafik.Grafik import grafik
+    app.register_blueprint(grafik)
+
+    # Pdf
+    from ObjectClass.Pdf.Pdf import pdf
+    app.register_blueprint(pdf)
 
     return app

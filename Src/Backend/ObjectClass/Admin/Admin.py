@@ -26,6 +26,7 @@ def refresh():
     new_token = guard.refresh_jwt_token(old_token)
     ret = {'access_token': new_token}
     return ret, 200
+
 # CREATE / REGISTER
 @admin.route('/admin/register', methods=['POST'])
 def add_admin():

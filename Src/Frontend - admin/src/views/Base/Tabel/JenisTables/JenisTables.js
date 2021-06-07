@@ -117,7 +117,6 @@ class JenisTables extends Component {
                   <Input type="text"
                          id="nf-email"
                          name="nf-email"
-                         disabled={true}
                          value={this.state.jenis_buku || ''}
                          onChange={this.onJenisBuku.bind(this)}
                          placeholder="Enter Jenis Buku"/>

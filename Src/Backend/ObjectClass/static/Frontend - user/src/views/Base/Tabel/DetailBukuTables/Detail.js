@@ -42,6 +42,9 @@ const text = {
   fontSize:'1.4rem'
 }
 
+
+
+
 const Detail = (props) =>{
   return(
     <Col xs="12" xl="15">
@@ -61,31 +64,35 @@ const Detail = (props) =>{
           <br/>
           <h6>Input Penilaian Buku : </h6>
           {/*Form*/}
-          <Form action="http://127.0.0.1:5000/nilai_buku" method="post">
+          <Form action="" onSubmit={props.onSubmit} method="POST" encType="multipart/form-data" className="form-horizontal">
             {/*id user*/}
             <FormGroup row>
               <Col md="3">
-                <Label htmlFor="id_user">User</Label>
+                {/*<Label htmlFor="id_user">User</Label>*/}
               </Col>
               <Col xs="12" md="9">
-                <Input type="text"
+                <Input type="hidden"
                        disabled ={true}
                        id="id_user"
                        name="id_user"
+                       onChange = {props.onIdUser}
                        value={props.id_user}/>
               </Col>
             </FormGroup>
             {/*id buku*/}
             <FormGroup row>
               <Col md="3">
-                <Label htmlFor="id_buku">No buku</Label>
+                {/*<Label htmlFor="id_buku">No buku</Label>*/}
               </Col>
               <Col xs="12" md="9">
-                <Input type="text"
+                <Input type="hidden"
                        id="id_buku"
                        name="id_buku"
                        disabled={true}
-                       value={props.id_buku}/>
+                       onChange = {props.onIdBuku}
+                       value={props.id_buku2}
+
+                />
               </Col>
             </FormGroup>
             {/*kelayakan isi*/}
@@ -96,6 +103,8 @@ const Detail = (props) =>{
               <Col xs="12" md="9">
                 <Input type="select"
                        id="kelayakan_isi"
+                       value={props.kelayakan_isi}
+                       onChange={props.onKelayakanIsi}
                        name="kelayakan_isi"
                 >
                   <option value="0">Silahkan dipilih</option>
@@ -120,6 +129,8 @@ const Detail = (props) =>{
               <Col xs="12" md="9">
                 <Input type="select"
                        id="kebahasaan"
+                       value={props.kebahasaan}
+                       onChange={props.onKebahasaan}
                        name="kebahasaan"
                        >
                   <option value="0">Silahkan dipilih</option>
@@ -144,6 +155,8 @@ const Detail = (props) =>{
               <Col xs="12" md="9">
                 <Input type="select"
                        id="penyajian"
+                       value={props.penyajian}
+                       onChange={props.onPenyajian}
                        name="penyajian"
                        >
                   <option value="0">Silahkan dipilih</option>
@@ -168,6 +181,8 @@ const Detail = (props) =>{
               <Col xs="12" md="9">
                 <Input type="select"
                        id="kegrafikaan"
+                       value={props.kegrafikaan}
+                       onChange={props.onKegrafikaan}
                        name="kegrafikaan">
                   <option value="0">Silahkan dipilih</option>
                   <option value="1">1</option>
@@ -184,7 +199,7 @@ const Detail = (props) =>{
               </Col>
             </FormGroup>
           {/*  Button */}
-            <Button type="submit" size="sm" color="primary"><i className="fa fa-dot-circle-o"></i> Submit</Button>
+            <Button type="submit" onClick={props.onClick} size="sm" color="primary"><i className="fa fa-dot-circle-o"></i> Submit</Button>
           </Form>
           <br/>
           <br/>
@@ -195,7 +210,8 @@ const Detail = (props) =>{
               Download</Button>
             <br/>
             <br/>
-            <SinglePagePDFViewer pdf={process.env.PUBLIC_URL + "/Files/" + props.userfile}/>
+            {/*<SinglePagePDFViewer pdf={process.env.PUBLIC_URL + "/Files/" + props.userfile}/>*/}
+            <iframe src={`${process.env.PUBLIC_URL + "/Files/" + props.userfile }`} width="1000" height="950" />
           </div>
 
           {/*</Carousel>*/}

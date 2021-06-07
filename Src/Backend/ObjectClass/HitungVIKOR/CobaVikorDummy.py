@@ -58,6 +58,7 @@ print()
 print("penentuan ranking Indeks VIKOR : ")
 print(q)
 print()
+print(dataset)
 # print(c_solution) # Final Solution
 # m = max(9, 0)
 # print(m)

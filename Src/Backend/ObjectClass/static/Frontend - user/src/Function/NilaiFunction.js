@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-//SELECT Buku
+//SELECT Nilai
 export const getNilai = () => {
   return axios
     .get('/nilai_buku', {
@@ -12,17 +12,37 @@ export const getNilai = () => {
         var val = res.data[key]
         tbl_nilai_buku.push([
           val.id_nilai_buku,
+          val.nama_user,
           val.kode_buku,
           val.nama_buku,
-          val.kode,
-          val.nama_kriteria,
-          val.bobot,
-          val.nilai_buku])
+          val.kelayakan_isi,
+          val.kebahasaan,
+          val.penyajian,
+          val.kegrafikaan])
       })
-
       return tbl_nilai_buku
     })
 }
+
+//SELECT id user
+export const getIdUser = () => {
+  return axios
+    .get('/nilai_buku/user', {
+      headers: { "Content-type": "application/json" }
+    })
+    .then(res => {
+      var iduser = []
+      Object.keys(res.data).forEach((key) => {
+        var val = res.data[key]
+        iduser.push([
+          val.id_user,
+          val.nama_user])
+      })
+
+      return iduser
+    })
+}
+
 //SELECT id buku
 export const getIdBuku = () => {
   return axios
@@ -37,37 +57,19 @@ export const getIdBuku = () => {
           val.id_buku,
           val.nama_buku])
       })
-
       return idbuku
     })
 }
-//SELECT id kriteria
-export const getIdKriteria = () => {
-  return axios
-    .get('/nilai_buku/kriteria', {
-      headers: { "Content-type": "application/json" }
-    })
-    .then(res => {
-      var idkriteria = []
-      Object.keys(res.data).forEach((key) => {
-        var val = res.data[key]
-        idkriteria.push([
-          val.id_kriteria,
-          val.kode,
-          val.nama_kriteria])
-      })
-
-      return idkriteria
-    })
-}
-
 export const addNilaiBuku = newNilai => {
   return axios
     .post(
       '/nilai_buku', {
+        id_user: newNilai.id_user,
         id_buku: newNilai.id_buku,
-        id_kriteria: newNilai.id_kriteria,
-        nilai_buku: newNilai.nilai_buku
+        kelayakan_isi: newNilai.kelayakan_isi,
+        kebahasaan: newNilai.kebahasaan,
+        penyajian: newNilai.penyajian,
+        kegrafikaan: newNilai.kegrafikaan
       }, {
         headers: { "Content-type": "application/json" }
       })
@@ -90,13 +92,16 @@ export const deleteNilai = id_nilai_buku => {
     })
 }
 
-export const updateNilaiBuku = (id_buku, id_kriteria, nilai_buku, id_nilai_buku) => {
+export const updateNilaiBuku = (id_user, id_buku, kelayakan_isi, kebahasaan, penyajian, kegrafikaan, id_nilai_buku) => {
   return axios
     .put(
       `/nilai_buku/${id_nilai_buku}`, {
+        id_user: id_user,
         id_buku: id_buku,
-        id_kriteria: id_kriteria,
-        nilai_buku: nilai_buku,
+        kelayakan_isi: kelayakan_isi,
+        kebahasaan: kebahasaan,
+        penyajian: penyajian,
+        kegrafikaan: kegrafikaan,
         id_nilai_buku: id_nilai_buku,
       }, {
         headers: { "Content-type": "application/json" }

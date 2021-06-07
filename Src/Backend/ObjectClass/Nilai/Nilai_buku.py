@@ -8,9 +8,10 @@ nilai = Blueprint('nilai',__name__)
 # CREATE
 @nilai.route('/nilai_buku', methods=['POST'])
 def add_nilai():
+
     cur = db.connection.cursor()
 
-    id_user = request.get_json()['id_user']
+    id_user = request.get_json(force=True)['id_user']
     id_buku = request.get_json()['id_buku']
     kelayakan_isi = request.get_json()['kelayakan_isi']
     kebahasaan = request.get_json()['kebahasaan']
@@ -31,15 +32,16 @@ def add_nilai():
     db.connection.commit()
     result = \
         {
-            'id_user'   : id_user,
+            'id_user': id_user,
             'id_buku': id_buku,
             'kelayakan_isi': kelayakan_isi,
             'kebahasaan': kebahasaan,
             'penyajian': penyajian,
-            'kegrafikaan'    : kegrafikaan
+            'kegrafikaan': kegrafikaan
         }
 
-    return jsonify({"result" : result})
+    return jsonify({"result": result})
+
 
 # READ
 @nilai.route('/nilai_buku', methods=['GET'])

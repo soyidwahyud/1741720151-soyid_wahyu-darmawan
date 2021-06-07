@@ -89,7 +89,8 @@ def get_all_buku():
                 "INNER JOIN tbl_penerbit as p1 "
                 "on b.id_penerbit = p1.id_penerbit " 
                 "INNER JOIN tbl_penulis as p2 "
-                "on b.id_penulis = p2.id_penulis  ")
+                "on b.id_penulis = p2.id_penulis "
+                "ORDER BY id_buku")
 
     db.connection.commit()
 

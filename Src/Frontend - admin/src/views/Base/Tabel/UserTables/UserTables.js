@@ -143,7 +143,7 @@ class UserTables extends Component {
           <Col xs="15" lg="10">
             <Card>
               <CardHeader>
-                <i className="fa fa-align-justify"></i> Tabel User
+                <i className="fa fa-align-justify"></i> Form User
               </CardHeader>
               <CardBody>
 

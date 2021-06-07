@@ -1,5 +1,17 @@
 import React, { Component } from 'react';
-import { Badge, Card, CardBody, CardHeader, Col, Pagination, PaginationItem, PaginationLink, Row, Table } from 'reactstrap';
+import {
+  Badge,
+  Button,
+  Card,
+  CardBody,
+  CardHeader,
+  Col,
+  Pagination,
+  PaginationItem,
+  PaginationLink,
+  Row,
+  Table
+} from 'reactstrap';
 
 import Rekomendasi from "./Rekomendasi";
 
@@ -28,11 +40,21 @@ class RekomendasiTables extends Component {
 
         <br/>
         <br/>
+        <Card>
+          <CardBody>
+            <p>Menu ini menampilkan data buku pada perhitungan metode VIKOR</p>
+            <p>Jika ingin melihat perhitungan metode VIKOR dapat melihat jurnal dibawah ini</p>
+            <Button type="button" color="primary" onClick={(event) => { event.preventDefault(); window.open(process.env.PUBLIC_URL + "/Draft Jurnal.pdf" ); }}>
+              lihat jurnal</Button>
+            <br/>
+          </CardBody>
+        </Card>
         <Row>
           {
-            this.state.RekomendasiBuku.map(rekomendasi => {
+            this.state.RekomendasiBuku.map((rekomendasi, index) => {
               return <Rekomendasi key={rekomendasi.id_buku}
                            id={rekomendasi.id_buku}
+                           ranking = {index + 1}
                            gambar = {rekomendasi.gambar}
                            nama_buku={rekomendasi.nama_buku}
                            nama_penulis={rekomendasi.nama_penulis}

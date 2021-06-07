@@ -1,0 +1,12 @@
+.label {
+  color: white;
+  padding: 8px;
+  font-family: Arial;
+  text-align: center;
+}
+
+.rank {
+  background-color: #02d9ff;
+  width: fit-content;
+
+} /* Green */

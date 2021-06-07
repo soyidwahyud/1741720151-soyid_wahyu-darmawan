@@ -16,6 +16,9 @@ import {
 import {Button} from 'reactstrap'
 import {getNakes, addNakes, deleteNakes, updateNakes} from '../../../../Function/NakesFunction'
 
+import {cariNakes} from "../../../../Function/CariFunction";
+
+
 
 class NakesTables extends Component {
   constructor() {
@@ -23,9 +26,11 @@ class NakesTables extends Component {
     this.state = {
       id_nakes: '',
       tenaga_kesehatan: '',
+      cari_nakes: '',
       tbl_nakes:[]
     }
     this.onNakes = this.onNakes.bind(this)
+    this.onSearchNakes = this.onSearchNakes.bind(this)
     this.routeEdit = this.routeEdit.bind(this);
     this.routeDelete = this.routeDelete.bind(this);
   }
@@ -36,6 +41,12 @@ class NakesTables extends Component {
   onNakes = e => {
     this.setState({
       tenaga_kesehatan: e.target.value
+    })
+  }
+
+  onSearchNakes = e => {
+    this.setState({
+      cari_nakes: e.target.value
     })
   }
 //SELECT
@@ -53,6 +64,21 @@ class NakesTables extends Component {
         })
     })
   }
+
+  // cari Nakes
+  onCariNakes = e => {
+    e.preventDefault()
+
+    const pencarian_nakes = {
+      cari_nakes: this.state.cari_nakes
+    }
+
+    cariNakes(pencarian_nakes)
+      .then(() => {
+        this.getAll()
+      })
+  }
+
   //DELETE
   routeDelete = (val, e) =>
   {
@@ -140,6 +166,20 @@ class NakesTables extends Component {
                 <i className="fa fa-align-justify"></i> Tabel Tenaga Kesehatan
               </CardHeader>
               <CardBody>
+                {/*Cari Nakes*/}
+                {/*<Form action="" method="post" onCariNakes={this.onCariNakes}>*/}
+                {/*  <FormGroup>*/}
+                {/*    <Input type="text"*/}
+                {/*           id="cari_nakes"*/}
+                {/*           name="cari_nakes"*/}
+                {/*           value={this.state.cari_nakes || ''}*/}
+                {/*           onChange={this.onSearchNakes.bind(this)}*/}
+                {/*           placeholder="Search Category"/>*/}
+                {/*  </FormGroup>*/}
+                {/*  <Button onClick={this.onCariNakes.bind(this)} type="search" size="sm" color="primary"><i className="fa fa-search"></i> Search</Button>*/}
+                {/*</Form>*/}
+                <br/>
+
                 <Table responsive>
                   <thead>
                   <tr>

@@ -8,6 +8,7 @@ matriks_keputusan = [
     [4, 4, 8, 6],
     [5, 7, 6, 6]
 ]
+
 nilai_maksimum = []
 nilai_minimum = []
 for i in range(len(kriteria)):
@@ -74,40 +75,56 @@ for i in range(len(alternatif)):
                 alternatif_ranking[j] = tmp_alternatif
                 hasil_akhir_ranking[j] = tmp_hasil_akhir
 
+print("Alternatif")
 print(str(alternatif))
 print()
+print("Kriteria")
 print(str(kriteria))
 print()
+print("Tipe Kriteria")
 print(str(tipe_kriteria))
 print()
+print("Bobot Kriteria")
 print(str(bobot_kriteria))
 print()
+print("Matriks Keputusan")
 print(str(matriks_keputusan))
 print()
+print("Nilai Maksimum")
 print(str(nilai_maksimum))
 print()
+print("Nilai Minimum")
 print(str(nilai_minimum))
 print()
+print("Matriks Normalisasi")
 print(str(matriks_normalisasi))
 print()
+print("Matriks Normalisasi Terbobot")
 print(str(matriks_normalisasi_terbobot))
 print()
+print("Nilai SI")
 print(str(Si))
 print()
+print("Nilai RI")
 print(str(Ri))
 print()
+print("Nilai Splus")
 print(str(Splus))
 print()
+print("Nilai Smin")
 print(str(Smin))
 print()
+print("Nilai Rplus")
 print(str(Rplus))
 print()
+print("Nilai Rmin")
 print(str(Rmin))
 print()
+print("Alternatif")
 print(str(alternatif))
-print()
+print("Hasil Akhir")
 print(str(hasil_akhir))
 print()
+print("Ranking")
 print(str(alternatif_ranking))
-
 print(str(hasil_akhir_ranking))

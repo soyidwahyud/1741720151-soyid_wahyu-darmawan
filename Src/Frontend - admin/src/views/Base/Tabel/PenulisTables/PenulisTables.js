@@ -133,7 +133,7 @@ class PenulisTables extends Component {
         </Col>
 
         <Row>
-          <Col xs="12" lg="6">
+          <Col xs="12" lg="16">
             <Card>
               <CardHeader>
                 <i className="fa fa-align-justify"></i> Tabel Penulis Buku

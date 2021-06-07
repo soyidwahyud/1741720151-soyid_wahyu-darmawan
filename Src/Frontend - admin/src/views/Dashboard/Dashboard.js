@@ -1,5 +1,4 @@
 import React, { Component, lazy, Suspense } from 'react';
-import { Bar, Line } from 'react-chartjs-2';
 import {
   Badge,
   Button,
@@ -20,12 +19,10 @@ import {
   Row,
   Table,
 } from 'reactstrap';
-import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips';
-import { getStyle, hexToRgba } from '@coreui/coreui/dist/js/coreui-utilities'
 import {getNewUser, getNewBuku, getNilaiDescending} from "../../Function/DashboardFunction";
-import {getUser} from "../../Function/UserFunction";
-import {getBuku} from "../../Function/BukuFunction";
 import {Link, withRouter} from 'react-router-dom';
+import axios from 'axios'
+import { Pie, Line, Bar, HorizontalBar } from 'react-chartjs-2';
 
 
 class Dashboard extends Component {
@@ -53,6 +50,12 @@ class Dashboard extends Component {
       kegrafikaan:'',
       tbl_nilai_buku_descending:[],
 
+    //  Grafik
+      grafik_bobot:{},
+      grafik_nilai_buku:{},
+      grafik_rata_rata:{},
+
+
     //  Buku
       //Get
       id_buku:'',
@@ -73,6 +76,132 @@ class Dashboard extends Component {
     this.getAllNewUser()
     this.getAllNewBuku()
     this.getAllNewNilai()
+    this.getGrafikBobot()
+    this.getGrafikNilaiBuku()
+    this.getGrafikRataRata()
+
+  }
+  //Get Grafik Rata-Rata
+  getGrafikRataRata = () =>{
+    axios.get('/grafik_rata_rata')
+      .then(res => {
+        console.log(res)
+        const rata_rata = res.data
+        let id_buku = []
+        let kelayakan_isi = []
+        let kebahasaan = []
+        let penyajian = []
+        let kegrafikaan = []
+        rata_rata.forEach(record => {
+          id_buku.push(record.id_buku)
+          kelayakan_isi.push(record.kelayakan_isi)
+          kebahasaan.push(record.kebahasaan)
+          penyajian.push(record.penyajian)
+          kegrafikaan.push(record.kegrafikaan)
+        })
+        this.setState({
+          grafik_rata_rata: {
+            labels: id_buku,
+            datasets:[
+              {
+                label: 'Kelayakan Isi',
+                data: kelayakan_isi,
+                backgroundColor: 'rgba(246,102,0,1)'
+              },
+              {
+                label: 'Kebahasaan',
+                data: kebahasaan,
+                backgroundColor: 'rgba(118,248,2,1)',
+              },
+              {
+                label: 'Penyajian',
+                data: penyajian,
+                backgroundColor: 'rgba(51,215,209,1)'
+              },
+              {
+                label: 'Kegrafikaan',
+                data: kegrafikaan,
+                backgroundColor: 'rgba(255,99,132,1)'
+              },
+            ]
+          }
+        })
+      })
+  }
+
+  //Get Grafik Bobot
+  getGrafikBobot = () =>{
+    axios.get('/grafik_bobot_kriteria')
+      .then(res => {
+        console.log(res)
+        const nilai_bobot = res.data
+        let nama_kriteria = []
+        let bobot = []
+        nilai_bobot.forEach(record => {
+          nama_kriteria.push(record.nama_kriteria)
+          bobot.push(record.bobot)
+        })
+        this.setState({
+          grafik_bobot: {
+            labels: nama_kriteria,
+            datasets:[
+              {
+                label: 'Bobot Kriteria',
+                data: bobot,
+                backgroundColor: [
+                  "#3cb371",
+                  "#0000FF",
+                  "#9966FF",
+                  "#4C4CFF",
+                  "#00FFFF",
+                  "#f990a7",
+                  "#aad2ed",
+                  "#FF00FF",
+                  "Blue",
+                  "Red"
+                ]
+              }
+            ]
+          }
+        })
+      })
+  }
+  //Get Grafik Nilai Buku
+  getGrafikNilaiBuku = () =>{
+    axios.get('/grafik_nilai_buku')
+      .then(res => {
+        console.log(res)
+        const nilai_buku = res.data
+        let total = []
+        let kode_buku = []
+        nilai_buku.forEach(record => {
+          total.push(record.total)
+          kode_buku.push(record.kode_buku)
+        })
+        this.setState({
+          grafik_nilai_buku: {
+            labels: kode_buku,
+            datasets:[
+              {
+                label: 'Nilai Buku',
+                data: total,
+                backgroundColor: [
+                  "#3cb371",
+                  "#0000FF",
+                  "#9966FF",
+                  "#4C4CFF",
+                  "#00FFFF",
+                  "#f990a7",
+                  "#aad2ed",
+                  "#FF00FF",
+                  "Blue",
+                  "Red"
+                ]
+              }
+            ]
+          }
+        })
+      })
   }
   //SELECT
   getAllNewUser = () => {
@@ -169,7 +298,6 @@ class Dashboard extends Component {
       <div className="animated fadeIn">
         <Row>
 
-
           <Col xs="12" sm="6" lg="3">
             <Card className="text-white bg-white">
               <CardBody className="pb-0">
@@ -207,7 +335,7 @@ class Dashboard extends Component {
             </Card>
           </Col>
 
-          <Col xs="12" sm="6" lg="3">
+          <Col xs="12" sm="10" lg="3">
             <Card className="text-white bg-white">
               <CardBody className="pb-0">
                 <Link to='base/nilai_tabel'>
@@ -219,6 +347,56 @@ class Dashboard extends Component {
             </Card>
           </Col>
         </Row>
+
+        <Row>
+          {/*Grafik Bobot*/}
+          <Col xs="6" lg="15">
+            <Card>
+              <CardHeader>
+                <i className="fa fa-align-justify"></i> Grafik Bobot
+              </CardHeader>
+              <CardBody>
+                <Pie data={this.state.grafik_bobot}
+                     options={{maintainAspectRatio: false}}
+                />
+              </CardBody>
+            </Card>
+          </Col>
+
+          {/*Grafik Nilai*/}
+          <Col xs="6" lg="15">
+            <Card>
+              <CardHeader>
+                <i className="fa fa-align-justify"></i> Grafik Nilai Buku
+              </CardHeader>
+              <CardBody>
+                <Line data={this.state.grafik_nilai_buku}
+                     options={{maintainAspectRatio: false}}
+                />
+              </CardBody>
+            </Card>
+          </Col>
+        </Row>
+
+        {/*Grafik Nilai*/}
+        <Col xs="15" lg="15">
+          <Card>
+            <CardHeader>
+              <i className="fa fa-align-justify"></i> Grafik Rata-rata
+            </CardHeader>
+            <CardBody>
+              <Bar data={this.state.grafik_rata_rata}
+                    options={{maintainAspectRatio: false,
+                      responsive: true,
+                      legend: {
+                        display: true,
+                      }
+                    }}
+              />
+            </CardBody>
+          </Card>
+        </Col>
+
         <Col xs="15" lg="15">
           <Card>
             <CardHeader>
@@ -233,8 +411,8 @@ class Dashboard extends Component {
                   <th>Nama User</th>
                   <th>Username User</th>
                   <th>Email User</th>
-                  <th>Password User</th>
-                  <th>Jabatan</th>
+
+
                   <th>Alamat</th>
                   <th>Telp</th>
                 </tr>
@@ -247,8 +425,8 @@ class Dashboard extends Component {
                     <td>{tbl_new_user[2]}</td>
                     <td>{tbl_new_user[3]}</td>
                     <td>{tbl_new_user[4]}</td>
-                    <td>{tbl_new_user[5]}</td>
-                    <td>{tbl_new_user[6]}</td>
+
+
                     <td>{tbl_new_user[7]}</td>
                     <td>{tbl_new_user[8]}</td>
                   </tr>
@@ -320,8 +498,7 @@ class Dashboard extends Component {
                   <th>Nama Penerbit</th>
                   <th>Tahun Terbit</th>
                   <th>Nama Penulis</th>
-                  <th>Gambar</th>
-                  <th>User File</th>
+
 
                 </tr>
                 </thead>
@@ -336,8 +513,7 @@ class Dashboard extends Component {
                     <td>{tbl_new_buku[5]}</td>
                     <td>{tbl_new_buku[6]}</td>
                     <td>{tbl_new_buku[7]}</td>
-                    <td>{tbl_new_buku[8]}</td>
-                    <td>{tbl_new_buku[9]}</td>
+
                   </tr>
                 ))}
                 </tbody>

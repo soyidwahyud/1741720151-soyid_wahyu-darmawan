@@ -5,6 +5,10 @@ from ..TabelVikor.TabelDB import TabelVikor
 from ..HitungVIKOR.CobaVikorDB import CobaHitungVIKOR
 from ..run import db, jwt, bcrypt
 import numpy as np
+import pandas as pd
+import json
+from collections import defaultdict
+flate = defaultdict(list)
 
 tabel = Blueprint('tabel',__name__)
 
@@ -16,22 +20,28 @@ def get_kelayakan_isi_data():
     rv = cur.fetchall()
     return jsonify(rv)
 
-# Read Test
-@tabel.route('/test', methods=['GET'])
-def get_test():
-    kelayakan_isi = request.get_json()['kelayakan_isi']
-    kebahasaan = request.get_json()['kebahasaan']
-    penyajian = request.get_json()['penyajian']
-    kegrafikaan = request.get_json()['kegrafikaan']
+# Read penyajian
+@tabel.route('/penyajian_isi_data', methods=['GET'])
+def get_penyajian_isi_data():
     cur = db.connection.cursor()
-    cur.execute("SELECT * FROM tbl_nilai_buku ORDER BY id_nilai_buku ASC ")
-    if(cur.rowcount > 0):
-        rv = cur.fetchall()
-        # for tes in rv:
-            # if kelayakan_isi == 10:
+    cur.execute("SELECT id_buku, penyajian FROM tbl_nilai_buku")
+    rv = cur.fetchall()
+    return jsonify(rv)
 
+# Read kebahasaan
+@tabel.route('/kebahasaan_isi_data', methods=['GET'])
+def get_kebahasaan_isi_data():
+    cur = db.connection.cursor()
+    cur.execute("SELECT id_buku, kebahasaan FROM tbl_nilai_buku")
+    rv = cur.fetchall()
+    return jsonify(rv)
 
-
+# Read kegrafikaan
+@tabel.route('/kegrafikaan_isi_data', methods=['GET'])
+def get_kegrafikaan_isi_data():
+    cur = db.connection.cursor()
+    cur.execute("SELECT id_buku, kegrafikaan FROM tbl_nilai_buku")
+    rv = cur.fetchall()
     return jsonify(rv)
 
 # Read Nilai Maks
@@ -71,35 +81,61 @@ def get_tabel_ranking():
                 "FROM tbl_buku as b "
                 "WHERE id_buku in (" + res + ") "
                 "ORDER BY FIELD(id_buku," + res + ")")
+
     rv = cur.fetchall()
     return jsonify(rv)
 
-# Read Vikor (bismillah)
-@tabel.route('/tes_kelayakan', methods=['GET'])
-def get_tabel():
-    TabelDB = TabelVikor()
-    kriteria_1 = TabelDB.data_kelayakan()
+# Read Tabel Ranking
+@tabel.route('/normalisasi', methods=['GET'])
+def get_normalisasi():
+    ObjekVikor = TabelVikor()
+    alternatif = ObjekVikor.data_IdBuku()
+    kriteria = ObjekVikor.data_Kriteria()
+    tipe_kriteria = ObjekVikor.data_TipeKriteria()
+    bobot_kriteria = ObjekVikor.data_Bobot()
+    matriks_keputusan = ObjekVikor.data_matriks_keputusan()
 
-    maks_kelayakan = max(kriteria_1)
-    min_kelayakan = min(kriteria_1)
+    nilai_maksimum = []
+    nilai_minimum = []
+    for i in range(len(kriteria)):
+        nilai_maksimum.append(0)
+        nilai_minimum.append(0)
+        for j in range(len(alternatif)):
+            if ((j == 0) or (nilai_maksimum[i] < matriks_keputusan[j][i])):
+                nilai_maksimum[i] = matriks_keputusan[j][i]
+            if ((j == 0) or (nilai_minimum[i] > matriks_keputusan[j][i])):
+                nilai_minimum[i] = matriks_keputusan[j][i]
 
-    # normalisasi_kelayakan_isi = (np.array(maks_kelayakan) - np.array(kriteria_1)) / (np.array(maks_kelayakan) - np.array(min_kelayakan))
-    normalisasi_kelayakan_isi = (np.array(maks_kelayakan) - kriteria_1) / (np.array(maks_kelayakan) - np.array(min_kelayakan))
-
-    data1 = [str(int) for int in maks_kelayakan]
-    res1 = ",".join(data1)
-
-    data2 = [str(int) for int in min_kelayakan]
-    res2 = ",".join(data2)
-
-    data3 = [str(int) for int in normalisasi_kelayakan_isi]
-    res3 = ",".join(data3)
-
+    # Matriks Normalisasi
+    matriks_normalisasi = []
+    for i in range(len(alternatif)):
+        matriks_normalisasi.append([])
+        for j in range(len(kriteria)):
+            matriks_normalisasi[i].append(0)
+            if tipe_kriteria[j] == "cost":
+                matriks_normalisasi[i][j] = (matriks_keputusan[i][j] - nilai_minimum[j]) / (
+                            nilai_maksimum[j] - nilai_minimum[j])
+            elif tipe_kriteria[j] == "benefit":  # tipe_kriteria[j] == "benefit":
+                matriks_normalisasi[i][j] = (nilai_maksimum[j] - matriks_keputusan[i][j]) / (
+                            nilai_maksimum[j] - nilai_minimum[j])
 
     result = \
         {
-            'kelayakan_isi': res3
+            'normalisasi': matriks_normalisasi
         }
 
-    # return jsonify(result)
-    return jsonify({"result" : result})
+    a = pd.DataFrame(result)
+    js = json.loads(a.to_json())
+    for k, v in js.items():
+        for r, i in v.items():
+            for c in range(len(i)):
+                new_column = "{}_{}".format(k, c + 1)
+                # print(new_column)
+                flate[new_column].append(i[c])
+
+    df2 = pd.DataFrame(data=flate)
+    # df3 = json.loads(df2.to_json())
+    df3 = "tes"
+
+    # return jsonify(rv)
+    return jsonify(df3)
